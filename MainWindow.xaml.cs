@@ -27,6 +27,7 @@ namespace Rankinator
 		int worseAdjust = 0;
 		List<string> TheList = new List<string>();
 		List<int> ComparedItems = new List<int>();
+		bool RankingStarted = false;
 		string newthing = "NEW THING";
 		public string MyProperty { get; set; } = "initial";
 
@@ -34,13 +35,14 @@ namespace Rankinator
 		{
 			InitializeComponent();
 			TheList.Add("ONE");
-			TheList.Add("TWO");
+			//TheList.Add("TWO");
 			NewItem();
 		}
 
 		void NewItem()
 		{
 			ComparedItems.Clear();
+			RankingStarted = false;
 			TopBound = 0;
 			BotBound = TheList.Count - 1;
 			newthing = $"Thing {TheList.Count}";
@@ -60,6 +62,7 @@ namespace Rankinator
 
 		private void BetterButton_Click(object sender, RoutedEventArgs e)
 		{
+			RankingStarted = true;
 			BotBound = currentComparison;
 			worseAdjust = 0;
 			NextComparison();
@@ -67,6 +70,7 @@ namespace Rankinator
 
 		private void WorseButton_Click(object sender, RoutedEventArgs e)
 		{
+			RankingStarted = true;
 			TopBound = currentComparison;
 			worseAdjust = 1;
 			NextComparison();
@@ -82,7 +86,7 @@ namespace Rankinator
 				currentComparison--;
 			}
 			UpdateStatusBar();
-			if (TopBound == BotBound
+			if ((TopBound == BotBound && RankingStarted)
 				|| (BotBound - TopBound == 1 && ComparedItems.Contains(TopBound) && ComparedItems.Contains(BotBound))
 				)
 			{
