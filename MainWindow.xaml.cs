@@ -43,6 +43,8 @@ namespace Rankinator
 		{
 			ComparedItems.Clear();
 			RankingStarted = false;
+			lastComparison = -1;
+			currentComparison = -1;
 			TopBound = 0;
 			BotBound = TheList.Count - 1;
 			newthing = $"Thing {TheList.Count}";
@@ -58,6 +60,7 @@ namespace Rankinator
 			BarListLength.Content = TheList.Count;
 			ListViewer.ItemsSource = null;
 			ListViewer.ItemsSource = TheList;
+			ListViewer.SelectedIndex = currentComparison;
 		}
 
 		private void BetterButton_Click(object sender, RoutedEventArgs e)
