@@ -22,13 +22,13 @@ namespace Rankinator
 	{
 		int TopBound { get; set; } = 0;
 		int BotBound { get; set; } = 0;
-		int lastComparison = -1;
-		int currentComparison = -1;
-		int worseAdjust = 0;
-		List<string> TheList = new List<string>();
-		List<int> ComparedItems = new List<int>();
-		bool RankingStarted = false;
-		string newthing = "NEW THING";
+		int LastComparison { get; set; } = -1;
+		int CurrentComparison { get; set; } = -1;
+		int WorseAdjust { get; set; } = 0;
+		List<string> TheList { get; set; } = new List<string>();
+		List<int> ComparedItems { get; set; } = new List<int>();
+		bool RankingStarted { get; set; } = false;
+		string Newthing { get; set; } = "NEW THING";
 		public string MyProperty { get; set; } = "initial";
 
 		public MainWindow()
@@ -43,11 +43,11 @@ namespace Rankinator
 		{
 			ComparedItems.Clear();
 			RankingStarted = false;
-			lastComparison = -1;
-			currentComparison = -1;
+			LastComparison = -1;
+			CurrentComparison = -1;
 			TopBound = 0;
 			BotBound = TheList.Count - 1;
-			newthing = $"Thing {TheList.Count}";
+			Newthing = $"Thing {TheList.Count}";
 			NextComparison();
 		}
 
@@ -55,51 +55,57 @@ namespace Rankinator
 		{
 			BarBotBound.Content = BotBound;
 			BarTopBound.Content = TopBound;
-			BarCurComp.Content = currentComparison;
-			BarLastComp.Content = lastComparison;
+			BarCurComp.Content = CurrentComparison;
+			BarLastComp.Content = LastComparison;
 			BarListLength.Content = TheList.Count;
 			ListViewer.ItemsSource = null;
 			ListViewer.ItemsSource = TheList;
-			ListViewer.SelectedIndex = currentComparison;
+			ListViewer.SelectedIndex = CurrentComparison;
+			ListViewer.ScrollIntoView(TheList[CurrentComparison]);
 		}
 
 		private void BetterButton_Click(object sender, RoutedEventArgs e)
 		{
 			RankingStarted = true;
-			BotBound = currentComparison;
-			worseAdjust = 0;
+			BotBound = CurrentComparison;
+			WorseAdjust = 0;
 			NextComparison();
 		}
 
 		private void WorseButton_Click(object sender, RoutedEventArgs e)
 		{
 			RankingStarted = true;
-			TopBound = currentComparison;
-			worseAdjust = 1;
+			TopBound = CurrentComparison;
+			WorseAdjust = 1;
 			NextComparison();
 		}
 
 		void NextComparison()
 		{
-			lastComparison = currentComparison;
-			ComparedItems.Add(lastComparison);
-			currentComparison = (int)Math.Ceiling((BotBound - TopBound) * 0.5f + TopBound);
-			if (currentComparison == lastComparison)
+			LastComparison = CurrentComparison;
+			ComparedItems.Add(LastComparison);
+			CurrentComparison = (int)Math.Ceiling((BotBound - TopBound) * 0.5f + TopBound);
+			if (CurrentComparison == LastComparison)
 			{
-				currentComparison--;
+				CurrentComparison--;
 			}
-			UpdateStatusBar();
 			if ((TopBound == BotBound && RankingStarted)
 				|| (BotBound - TopBound == 1 && ComparedItems.Contains(TopBound) && ComparedItems.Contains(BotBound))
 				)
 			{
-				MessageBox.Show($"{newthing} was added at position {lastComparison + worseAdjust}");
-				TheList.Insert(lastComparison + worseAdjust, newthing);
+				//MessageBox.Show($"{newthing} was added at position {lastComparison + worseAdjust}");
+				TheList.Insert(LastComparison + WorseAdjust, Newthing);
 				NewItem();
 				return;
 			}
-			BetterButton.Content = newthing;
-			WorseButton.Content = TheList[currentComparison];
+			BetterButton.Content = Newthing;
+			WorseButton.Content = TheList[CurrentComparison];
+			UpdateStatusBar();
+		}
+
+		private void ListViewer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			ListViewer.SelectedIndex = CurrentComparison;
 		}
 	}
 }
