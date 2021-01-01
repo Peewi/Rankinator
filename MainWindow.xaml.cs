@@ -28,8 +28,8 @@ namespace Rankinator
 		List<string> TheList { get; set; } = new List<string>();
 		List<int> ComparedItems { get; set; } = new List<int>();
 		bool RankingStarted { get; set; } = false;
+		int ChoicesMade { get; set; } = 0;
 		string Newthing { get; set; } = "NEW THING";
-		public string MyProperty { get; set; } = "initial";
 
 		public MainWindow()
 		{
@@ -43,6 +43,7 @@ namespace Rankinator
 		{
 			ComparedItems.Clear();
 			RankingStarted = false;
+			ChoicesMade = 0;
 			LastComparison = -1;
 			CurrentComparison = -1;
 			TopBound = 0;
@@ -62,6 +63,18 @@ namespace Rankinator
 			ListViewer.ItemsSource = TheList;
 			ListViewer.SelectedIndex = CurrentComparison;
 			ListViewer.ScrollIntoView(TheList[CurrentComparison]);
+
+			int i = 0;
+			while (true)
+			{
+				if (Math.Pow(2,i) >= TheList.Count)
+				{
+					StatusProgress.Maximum = i;
+					break;
+				}
+				i++;
+			}
+			StatusProgress.Value = ChoicesMade;
 		}
 
 		private void BetterButton_Click(object sender, RoutedEventArgs e)
@@ -69,6 +82,7 @@ namespace Rankinator
 			RankingStarted = true;
 			BotBound = CurrentComparison;
 			WorseAdjust = 0;
+			ChoicesMade++;
 			NextComparison();
 		}
 
@@ -77,6 +91,7 @@ namespace Rankinator
 			RankingStarted = true;
 			TopBound = CurrentComparison;
 			WorseAdjust = 1;
+			ChoicesMade++;
 			NextComparison();
 		}
 
