@@ -70,9 +70,6 @@
 			<Separator/>
 			<StatusBarItem x:Name="BarCurCompLabel" Content="Current Comparison:" />
 			<StatusBarItem x:Name="BarCurComp" Content="0"/>
-			<Separator />
-			<StatusBarItem x:Name="BarLastCompLabel" Content="Last Comparison:" />
-			<StatusBarItem x:Name="BarLastComp" Content="0"/>
 		</StatusBar>
 
 	</Grid>

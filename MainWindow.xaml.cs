@@ -23,12 +23,8 @@ namespace Rankinator
 	{
 		int TopBound { get; set; } = 0;
 		int BotBound { get; set; } = 0;
-		int LastComparison { get; set; } = -1;
 		int CurrentComparison { get; set; } = -1;
-		int WorseAdjust { get; set; } = 0;
 		List<string> TheList { get; set; } = new List<string>();
-		List<int> ComparedItems { get; set; } = new List<int>();
-		bool RankingStarted { get; set; } = false;
 		int ChoicesMade { get; set; } = 0;
 		string Newthing { get; set; } = "NEW THING";
 		int ListViewerTarget { get; set; } = 0;
@@ -54,31 +50,13 @@ namespace Rankinator
 		void StartRankingNewItem(string newItemName)
 		{
 			SwitchToRankingView();
-			ComparedItems.Clear();
-			RankingStarted = false;
 			ChoicesMade = 0;
-			LastComparison = -1;
 			CurrentComparison = -1;
 			TopBound = 0;
 			BotBound = TheList.Count - 1;
 			Newthing = newItemName;
-			if (TheList.Count == 0)
-			{
-				TheList.Add(Newthing);
-				BarMessage.Content = $"Started list with {Newthing}";
-				SaveList();
-				RefreshListView();
-				SwitchToNewItemView();
-				if (AddingFromFile && RemoveCheckbox.IsChecked == true)
-				{
-					RemoveItemFromInput(Newthing);
-				}
-			}
-			else
-			{
-				NextComparison();
-				BarMessage.Content = $"Ranking {newItemName}";
-			}
+			BarMessage.Content = $"Ranking {newItemName}";
+			NextComparison();
 		}
 		/// <summary>
 		/// Load the list from <c>LISTFILENAME</c>.
@@ -214,65 +192,43 @@ namespace Rankinator
 			BarBotBound.Content = BotBound;
 			BarTopBound.Content = TopBound;
 			BarCurComp.Content = CurrentComparison;
-			BarLastComp.Content = LastComparison;
 			BarListLength.Content = TheList.Count;
 
-			int i = 0;
-			while (true)
-			{
-				if (Math.Pow(2,i) >= TheList.Count)
-				{
-					StatusProgress.Maximum = i;
-					break;
-				}
-				i++;
-			}
+			StatusProgress.Maximum = Math.Ceiling(Math.Log2(TheList.Count));
 			StatusProgress.Value = ChoicesMade;
 		}
 
 		private void BetterButton_Click(object sender, RoutedEventArgs e)
 		{
-			RankingStarted = true;
-			BotBound = CurrentComparison;
-			WorseAdjust = 0;
+			BotBound = CurrentComparison - 1;
 			ChoicesMade++;
 			NextComparison();
 		}
 
 		private void WorseButton_Click(object sender, RoutedEventArgs e)
 		{
-			RankingStarted = true;
-			TopBound = CurrentComparison;
-			WorseAdjust = 1;
+			TopBound = CurrentComparison + 1;
 			ChoicesMade++;
 			NextComparison();
 		}
 		/// <summary>
-		/// A decision was made and now we want the next comparison.
+		/// Set CurrentComparison and button labels.
+		/// Insert into the list if it's time.
 		/// </summary>
 		void NextComparison()
 		{
-			LastComparison = CurrentComparison;
-			ComparedItems.Add(LastComparison);
-			CurrentComparison = (int)Math.Ceiling((BotBound - TopBound) * 0.5f + TopBound);
-			if (CurrentComparison == LastComparison)
+			CurrentComparison = (int)Math.Floor((BotBound - TopBound) * 0.5f + TopBound);
+			if (TopBound > BotBound)
 			{
-				CurrentComparison--;
-			}
-			if ((TopBound == BotBound && RankingStarted)
-				|| (BotBound - TopBound == 1 && ComparedItems.Contains(TopBound) && ComparedItems.Contains(BotBound))
-				)
-			{
-				//MessageBox.Show($"{newthing} was added at position {LastComparison + WorseAdjust}");
-				TheList.Insert(LastComparison + WorseAdjust, Newthing);
-				BarMessage.Content = $"{Newthing} was added at position {LastComparison + WorseAdjust}";
+				TheList.Insert(TopBound, Newthing);
+				BarMessage.Content = $"{Newthing} was added at position {TopBound}";
 				if (AddingFromFile && RemoveCheckbox.IsChecked == true)
 				{
 					RemoveItemFromInput(Newthing);
 				}
 				SaveList();
 				SwitchToNewItemView();
-				RefreshListView(LastComparison + WorseAdjust);
+				RefreshListView(TopBound);
 				UpdateStatusBar();
 				return;
 			}
