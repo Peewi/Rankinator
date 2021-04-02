@@ -20,6 +20,7 @@
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="auto"/>
@@ -32,11 +33,13 @@
 			<Button x:Name="AddTextboxButton" Content="Add from textbox" Grid.Column="0" Grid.Row="1" Margin="10,10,10,5" Click="AddTextboxButton_Click"/>
 			<Button x:Name="AddTopButton" Content="From top of input.txt" Grid.Column="1" Grid.Row="1" Margin="10,10,5,5" Click="AddTopButton_Click"/>
 			<Button x:Name="AddRandomButton" Content="Random from input.txt" Grid.Column="2" Grid.Row="1" Margin="5,10,10,5" Click="AddRandomButton_Click"/>
+			<Button x:Name="OpenList" Content="Open thelist.txt" Grid.Column="0" Grid.Row="3" Margin="5,10,10,5" Click="OpenList_Click" />
+			<Button x:Name="OpenInput" Content="Open input.txt" Grid.Column="1" Grid.Row="3" Margin="5,10,10,5" Click="OpenInput_Click" />
 			<Rectangle Grid.RowSpan="2" Grid.Column="0"  Grid.Row="1" Stroke="Black" Margin="5,5,5,5" />
 			<Rectangle Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2"  Grid.Row="1" Stroke="Black" Margin="5,5,5,5" />
 
 		</Grid>
-		<Grid x:Name="BetterWorseGrid" Visibility="Hidden" d:Visibility="Visible" >
+		<Grid x:Name="BetterWorseGrid" Visibility="Hidden" d:Visibility="Hidden" >
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -300,6 +301,41 @@ namespace Rankinator
 				Random rng = new Random();
 				AddingFromFile = true;
 				StartRankingNewItem(LoadInput()[rng.Next(0, input.Count - 1)]);
+			}
+		}
+
+		private void OpenList_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				var p = new Process();
+				p.StartInfo.FileName = LISTFILENAME;
+				p.StartInfo.UseShellExecute = true;
+				p.Start();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+		}
+
+		private void OpenInput_Click(object sender, RoutedEventArgs e)
+		{
+			if (!File.Exists(INPUTFILENAME))
+			{
+				var foo = File.CreateText(INPUTFILENAME);
+				foo.Close();
+			}
+			try
+			{
+				var p = new Process();
+				p.StartInfo.FileName = INPUTFILENAME;
+				p.StartInfo.UseShellExecute = true;
+				p.Start();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
 			}
 		}
 	}
